@@ -1,21 +1,16 @@
-﻿@page "/person-list"
+﻿@page "/book-list"
 
-@using Business.Interfaces
-@using BlazorServer.Helper
-@using ModelDTOs
-@using System.Diagnostics.Eventing.Reader
-
-@inject IPersonManager _personManager
+@inject IBookManager _bookManager
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _jsRuntime
 
 <div class="row mt-4">
     <div class="col">
-        <h4 class="card-title text-info">A List of People</h4>
+        <h4 class="card-title text-info">My Library</h4>
     </div>
 
     <div class="col-3 offset-1">
-        <NavLink href="person/create" class="btn btn-info form-control">Add New Person</NavLink>
+        <NavLink href="book/create" class="btn btn-info form-control">Add New Book</NavLink>
     </div>
 </div>
 
@@ -25,31 +20,42 @@
             <thead>
             <tr>
                 <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th>Date of Birth</th>
+                <th>Title</th>
+                <th>AuthorFirstName</th>
+                <th>AuthorLastName</th>
+                <th>PrintLength</th>
+                <th>Publisher</th>
+                @*<th>PublicationDate</th>*@
+                <th>ISBN</th>
+                <th>IsActive</th>
+                <th>Price</th>
+                <th>Review Rating</th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-                @if (Persons.Any())
+                @if (Books.Any())
                 {
-                    @foreach (var person in Persons)
+                    @foreach (var book in Books)
                     {
                         <tr>
-                            <td>@person.PersonId</td>
-                            <td>@person.FirstName</td>
-                            <td>@person.LastName</td>
-                            <td>@person.Age</td>
-                            <td>@person.DateOfBirth</td>
+                            <td>@book.Id</td>
+                            <td>@book.Title</td>
+                            <td>@book.AuthorFirstName</td>
+                            <td>@book.AuthorLastName</td>
+                            <td>@book.PrintLength</td>
+                            <td>@book.Publisher</td>
+                            @*<td>@book.PublicationDate</td>*@
+                            <td>@book.ISBN</td>
+                            <td>@book.IsActive</td>
+                            <td>@book.Price</td>
+                            <td>@book.ReviewRating</td>
                             <td>
-                                <NavLink href="@($"person/edit/{person.PersonId}")" class="btn btn-primary">Edit</NavLink>
-                                <button class="btn btn-danger" @onclick="()=> HandleDelete(person.PersonId)">Delete</button>
+                                <NavLink href="@($"book/edit/{book.Id}")" class="btn btn-primary">Edit</NavLink>
+                                <button class="btn btn-danger" @onclick="()=> HandleDelete(book.Id)">Delete</button>
                             </td>
                         </tr>
                     }
-
                 }
                 else
                 {
@@ -62,25 +68,24 @@
     </div>
 </div>
 
-
-<DeleteConfirmation IsParentComponentProcessing="IsProcessing" ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
+<_DeleteConfirmation IsParentComponentProcessing="IsProcessing" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
 
 @code {
 
-    public IEnumerable<PersonDTO> Persons { get; set; } = new List<PersonDTO>();
-    private int? DeletePersonId { get; set; } = null;
+    public IEnumerable<BookDTO> Books { get; set; } = new List<BookDTO>();
+    private int? DeleteId { get; set; } = null;
 
     private bool IsProcessing { get; set; } = false;
 
 
     protected override async Task OnInitializedAsync()
     {
-        Persons = await _personManager.GetAllPersonsAsync();
+        Books = await _bookManager.GetBooksAsync();
     }
 
-    private async Task HandleDelete(int personId)
+    private async Task HandleDelete(int id)
     {
-        DeletePersonId = personId;
+        DeleteId = id;
 
         await _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
     }
@@ -89,15 +94,15 @@
     {
         IsProcessing = true;
 
-        if (isConfirmed && DeletePersonId != null)
+        if (isConfirmed && DeleteId != null)
         {
-            await _personManager.DeletePersonAsync(DeletePersonId.Value);
-            await _jsRuntime.ToastrSuccess("Person deleted successfully");
-            Persons = await _personManager.GetAllPersonsAsync();
+            await _bookManager.DeleteBookAsync(DeleteId.Value);
+            await _jsRuntime.ToastrSuccess("Book deleted successfully");
+            
+            Books = await _bookManager.GetBooksAsync();
         }
 
         await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
         IsProcessing = false;
     }
-
 }

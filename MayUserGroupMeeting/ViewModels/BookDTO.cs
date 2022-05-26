@@ -17,9 +17,8 @@
 
         public string Publisher { get; set; } = null!;
 
-        public DateTime PublicationDate { get; set; } = DateTime.Now;
+        public string ISBN { get; set; }
 
-        public int ISBN { get; set; }
         [Range(1, 10, ErrorMessage = "Rate between 1 (low) and 10 (high)")]
         public int ReviewRating { get; set; }
 

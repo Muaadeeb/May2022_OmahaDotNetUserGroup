@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Common", "4-Common", "{8A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{BE344635-4004-4116-A00F-C6C22FD8E911}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBookServer", "BlazorBookServer\BlazorBookServer.csproj", "{295DC755-14FF-4843-B99E-66CD45DF3A3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBookServer", "BlazorBookServer\BlazorBookServer.csproj", "{295DC755-14FF-4843-B99E-66CD45DF3A3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

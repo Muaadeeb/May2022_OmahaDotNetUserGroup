@@ -10,8 +10,9 @@
         public int PrintLength { get; set; }
         public string Publisher { get; set; } = null!;
         public DateTime PublicationDate { get; set; }
-        public int ISBN { get; set; }
+        public string ISBN { get; set; } = null!;
         public int ReviewRating { get; set; }
         public string Comments { get; set; } = null!;
+        public double Price { get; set; }
     }
 }

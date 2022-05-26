@@ -1,46 +1,69 @@
-﻿@page "/person/create"
-@page "/person/edit/{PersonId:int}"
+﻿@page "/book/create"
+@page "/book/edit/{Id:int}"
 
-@using Business.Interfaces
-@using ModelDTOs
 @using Microsoft.AspNetCore.Components
-@using BlazorServer.Helper
-
-
 @inject NavigationManager _navigationManager
-@inject IPersonManager _personManager
+@inject IBookManager _bookManager
 @inject IJSRuntime _jsRuntime
 
 <div class="row mt-2 mb-5">
-    <h3 class="card-title text-info mb-3 ml-3">@Title Person</h3>
+    <h3 class="card-title text-info mb-3 ml-3">@Title Book</h3>
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <EditForm Model="PersonDto" OnValidSubmit="HandlePersonUpsert">
+                <EditForm Model="BookDto" OnValidSubmit="HandleBookUpsert">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
                     <div class="form-group">
+                        <label>Title</label>
+                        <InputText @bind-Value="BookDto.Title" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.Title"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
                         <label>First Name</label>
-                        <InputText @bind-Value="PersonDto.FirstName" class="form-control" />
-                        <ValidationMessage For="()=> PersonDto.FirstName"></ValidationMessage>
+                        <InputText @bind-Value="BookDto.AuthorFirstName" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.AuthorFirstName"></ValidationMessage>
                     </div>
                     <div class="form-group">
                         <label>Last Name</label>
-                        <InputText @bind-Value="PersonDto.LastName" class="form-control" />
-                        <ValidationMessage For="()=> PersonDto.LastName"></ValidationMessage>
+                        <InputText @bind-Value="BookDto.AuthorLastName" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.AuthorLastName"></ValidationMessage>
+                    </div>
+                   <div class="form-group">
+                        <label>Print Length</label>
+                        <InputNumber @bind-Value="BookDto.PrintLength" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.PrintLength"></ValidationMessage>
                     </div>
                     <div class="form-group">
-                        <label>Age</label>
-                        <InputNumber @bind-Value="PersonDto.Age" class="form-control" />
-                        <ValidationMessage For="()=> PersonDto.Age"></ValidationMessage>
+                        <label>Publisher</label>
+                        <InputText @bind-Value="BookDto.Publisher" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.Publisher"></ValidationMessage>
                     </div>
                     <div class="form-group">
-                        <label>Date of Birth</label>
-                        <InputDate type="text" class="form-control" @bind-Value="PersonDto.DateOfBirth" min="@DateTime.Now.AddYears(-80).ToString("yyy-MM-dd")" />
-                        <ValidationMessage For="()=> PersonDto.DateOfBirth"></ValidationMessage>
+                        <label>ASIN / ISBN </label>
+                        <InputText @bind-Value="BookDto.ISBN" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.ISBN"></ValidationMessage>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary">@Title Person </button>
-                        <NavLink href="person-list" class="btn btn-secondary">Back</NavLink>
+                        <label>Price </label>
+                        <InputNumber @bind-Value="BookDto.Price" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.Price"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
+                        <label>Comments</label>
+                        <InputText @bind-Value="BookDto.Comments" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.Comments"></ValidationMessage>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Review Rating</label>
+                        <InputNumber @bind-Value="BookDto.ReviewRating" class="form-control" />
+                        <ValidationMessage For="()=> BookDto.ReviewRating"></ValidationMessage>
+                    </div>
+
+
+                    <div class="form-group">
+                        <button class="btn btn-primary">@Title Book </button>
+                        <NavLink href="book-list" class="btn btn-secondary">Back</NavLink>
                     </div>
                 </EditForm>
             </div>
@@ -51,32 +74,33 @@
 @code {
 
     [Parameter]
-    public int? PersonId { get; set; }
+    public int? Id { get; set; }
 
-    private PersonDTO PersonDto { get; set; } = new PersonDTO();
+    private BookDTO BookDto { get; set; } = new BookDTO();
     private string Title { get; set; } = "Create";
 
     protected override async Task OnInitializedAsync()
     {
-        if (PersonId != null)
+        if (Id != null)
         {
             Title = "Update";
-            PersonDto = await _personManager.GetPersonAsync(PersonId.Value);
+            BookDto = await _bookManager.GetBookAsync(Id.Value);
         }
         else
         {
             Title = "Create";
-            PersonDto = new PersonDTO();
+            BookDto = new();
         }
     }
+    
 
-    private async Task HandlePersonUpsert()
+    private async Task HandleBookUpsert()
     {
         try
         {
-            if (PersonDto.PersonId != 0 && Title == "Update")
+            if (BookDto.Id != 0 && Title == "Update")
             {
-                var updateResult = await _personManager.UpdatePersonAsync(PersonDto);
+                var updateResult = await _bookManager.UpdateBookAsync(BookDto);
 
                 if (updateResult != null)
                 {
@@ -89,7 +113,7 @@
             }
             else
             {
-                var createdResult = await _personManager.CreatePersonAsync(PersonDto);
+                var createdResult = await _bookManager.CreateBookAsync(BookDto);
                 if (createdResult != null)
                 {
                     await _jsRuntime.ToastrSuccess("Person created successfully.");
@@ -105,8 +129,6 @@
             throw new Exception($"Whoops! Location: Handle Person Upsert -> {ex.Message}");
         }
 
-        _navigationManager.NavigateTo("person-list");
+        _navigationManager.NavigateTo("book-list");
     }
-
-
 }

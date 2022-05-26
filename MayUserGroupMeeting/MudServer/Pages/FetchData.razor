@@ -1,0 +1,123 @@
+﻿@page "/weather-forecast"
+@using MudServer.Data
+@inject WeatherForecastService ForecastService
+
+<PageTitle>Weather forecast</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
+<MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
+@if (forecasts == null)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+else
+{
+    <MudTabs @bind-ActivePanelIndex="@activeTabIndex" Outlined>
+        
+        <MudTabPanel Text="Table" Icon="@Icons.Material.Filled.WbSunny" BadgeData='"New"' BadgeColor="Color.Info" ToolTip="Forecasts displayed in a table">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTable Items="@forecasts" Hover="true" SortLabel="Sort By" Elevation="0">
+                        <HeaderContent>
+                            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x => x.Date)">Date</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x => x.TemperatureC)">Temp. (C)</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x => x.TemperatureF)">Temp. (F)</MudTableSortLabel></MudTh>
+                            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x => x.Summary)">Summary</MudTableSortLabel></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Date">@context.Date</MudTd>
+                            <MudTd DataLabel="Temp. (C)">@context.TemperatureC</MudTd>
+                            <MudTd DataLabel="Temp. (F)">@context.TemperatureF</MudTd>
+                            <MudTd DataLabel="Summary">@context.Summary</MudTd>
+                        </RowTemplate>
+                        <PagerContent>
+                            <MudTablePager PageSizeOptions="new int[] { 50, 100 }"/>
+                        </PagerContent>
+                    </MudTable>
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="Chart" Icon="@Icons.Material.Outlined.Cloud" BadgeData="@TabChartBadgeText" BadgeColor="Color.Error" ToolTip="ForecastService displayed in a chart">
+            <MudChart ChartType="ChartType.Line" ChartSeries="@Series" ChartOptions="@chartOptions" LegendPosition="Position.Right" Width="570px" Height="570px"></MudChart>
+        </MudTabPanel>
+    </MudTabs>
+}
+<br />
+
+<MudGrid>
+    <MudItem xs="12" sm="3">
+        <MudDatePicker Label="Until Date" @bind-Date="UntilDate" PickerClosed="OnDatePickerClosed" PickerVariant="PickerVariant.Dialog" Orientation="Orientation.Portrait" Color="Color.Primary" OpenTo="OpenTo.Date" ReadOnly="false" />
+    </MudItem>
+
+    <MudItem xs="12" sm="4">
+        <MudDateRangePicker Label="Forecast For a Range" @bind-DateRange="SelectedDateRange" PickerClosed="OnDateRangePickerClosed" />
+    </MudItem>
+</MudGrid>
+
+
+@code {
+
+    private WeatherForecast[] forecasts = null!;
+    public List<ChartSeries> Series = new();
+    public ChartOptions chartOptions = new();
+
+    public int activeTabIndex;
+    string TabChartBadgeText { get; set; } = string.Empty;
+
+    DateTime? FromDate { get; set; } = DateTime.Now;
+    DateTime? UntilDate { get; set; } = DateTime.Now.AddMonths(1);
+    DateRange SelectedDateRange { get; set; } = new DateRange(DateTime.Now, DateTime.Now.AddMonths(1));
+
+    protected override async Task OnInitializedAsync()
+    {
+        var tempFromDate = FromDate.ToString();
+        var tempToDate = UntilDate.ToString();
+
+        DateTime FrmDate = DateTime.Parse(tempFromDate!);
+        DateTime ToDate = DateTime.Parse(tempToDate!);
+        forecasts = await ForecastService.GetForecastAsync(FrmDate, ToDate);
+
+        Series.Add(new ChartSeries()
+            {
+                Name = "T Celsius",
+                Data = forecasts?.Select<WeatherForecast, double>(x => x.TemperatureC).ToArray()
+            });
+
+        Series.Add(new ChartSeries()
+            {
+                Name = "T Fahrenheit",
+                Data = forecasts?.Select<WeatherForecast, double>(x => x.TemperatureF).ToArray()
+            });
+
+        chartOptions.InterpolationOption = InterpolationOption.NaturalSpline;
+        chartOptions.DisableLegend = false;
+        chartOptions.ChartPalette = new string[] { MudBlazor.Colors.Green.Default, MudBlazor.Colors.Red.Default };
+
+        TabChartBadgeText = forecasts?.Length.ToString() ?? "0";
+    }
+
+    private async Task ReadWeatherForecastFromServer()
+    {
+        var tempFromDate = FromDate.ToString();
+        var tempToDate = UntilDate.ToString();
+
+        DateTime FrmDate = DateTime.Parse(tempFromDate!);
+        DateTime ToDate = DateTime.Parse(tempToDate!);
+
+        forecasts = await ForecastService.GetForecastAsync(FrmDate, ToDate);
+    }
+
+
+    private async Task OnDatePickerClosed()
+    {
+        FromDate = DateTime.Now;
+        await ReadWeatherForecastFromServer();
+    }
+
+    private async Task OnDateRangePickerClosed()
+    {
+        FromDate = SelectedDateRange.Start;
+        UntilDate = SelectedDateRange.End;
+        await ReadWeatherForecastFromServer();
+    }
+}

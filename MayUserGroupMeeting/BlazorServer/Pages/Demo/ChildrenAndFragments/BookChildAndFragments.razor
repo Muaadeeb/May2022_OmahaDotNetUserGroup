@@ -1,0 +1,69 @@
+﻿@page "/childAndFragment"
+
+<h2 class="text-primary">Children & Fragments</h2>
+<p>Favorites Total : @SelectedFavoriteCount</p>
+<p>Last Selected Book : @LastSelectedBookTitle</p>
+
+<div class="border p-2 mt-2" style="background-color:azure">
+    <div class="row">
+        @foreach (var book in Books)
+        {
+            <_SingleBook Book="book"
+                                OnFavoriteUpdated="FavoriteCountUpdate"
+                                OnLastSelectedBookChange="SelectedBookUpdate">
+                <FirstFragment>#1</FirstFragment>
+                <SecondFragment>#2</SecondFragment>
+            </_SingleBook>
+        }
+    </div>
+</div>
+
+@code {
+
+    public readonly List<BookDTO> Books = new();
+    private int SelectedFavoriteCount { get; set; } = 0;
+    private string LastSelectedBookTitle { get; set; } = null!;
+
+
+    protected override void OnInitialized()
+    {
+        Books.Add(new()
+        {
+            Id = 2,
+            AuthorFirstName = "Mark",
+            AuthorLastName = "Sullivan",
+            Title = "The Last Green Valley",
+            IsActive = true,
+            Price = 9.59
+        });
+
+        Books.Add(new()
+        {
+            Id = 3,
+            AuthorFirstName = "James",
+            AuthorLastName = "Mace",
+            Title = "Soldier of Rome: March to Oblivion",
+            IsActive = true,
+            Price = 4.99
+        });
+    }
+
+
+    protected void FavoriteCountUpdate(bool isSelected)
+    {
+        if (isSelected)
+        {
+            SelectedFavoriteCount++;
+        }
+        else
+        {
+            SelectedFavoriteCount--;
+        }
+    }
+
+    protected void SelectedBookUpdate(string bookTitle)
+    {
+        LastSelectedBookTitle = bookTitle;
+    }
+
+}

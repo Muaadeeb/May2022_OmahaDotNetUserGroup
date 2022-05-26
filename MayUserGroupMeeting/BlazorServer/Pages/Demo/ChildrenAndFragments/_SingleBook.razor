@@ -1,0 +1,45 @@
+﻿
+<div class="bg-light border m-1 col-5" @onclick="(args)=>LastSelectedBook(args, Book.Title)">
+    <h4 class="text-secondary">Book - @Book.Id</h4>
+    <input type="checkbox" @onchange="FavoriteUpdatedAsync"/>Add to Favorite <br/><br/>
+    Title - @Book.Title <br />
+    
+    <p>RenderFragment from parent - @FirstFragment @SecondFragment</p>
+    Show Author:
+    <input type="checkbox" @bind-value="Book.IsActive" checked="@(Book.IsActive ? "checked" : null)" />
+                
+    @if (Book.IsActive)
+    {
+        <p>@(Book.AuthorFirstName + ' ' + Book.AuthorLastName)p</p>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public BookDTO Book { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnLastSelectedBookChange { get; set; }
+
+    [Parameter]
+    public RenderFragment FirstFragment { get; set; }
+
+    [Parameter]
+    public RenderFragment SecondFragment { get; set; }
+
+
+    private async Task FavoriteUpdatedAsync(ChangeEventArgs e)
+    {
+        await OnFavoriteUpdated.InvokeAsync((bool)e.Value!);
+    }
+
+    private async Task LastSelectedBook(MouseEventArgs e, string name)
+    {
+        await OnLastSelectedBookChange.InvokeAsync(name);
+    }
+
+}

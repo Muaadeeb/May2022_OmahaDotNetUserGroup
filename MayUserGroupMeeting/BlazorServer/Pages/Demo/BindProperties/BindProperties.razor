@@ -1,0 +1,99 @@
+﻿@page "/bindproperties"
+
+<h2 class="text-success">Bind Properties Demo Page</h2>
+<div class="row">
+    <div class="col-6 border p-3">
+        <h3 class="text-primary">Book Data Binding</h3><hr />
+        <h4>One way data binding</h4>
+        <div>
+            Active: <input type="checkbox" @bind-value="Book.IsActive" checked="@(Book.IsActive ? "checked" : null)" /><br />
+        </div>
+        <div>
+            Price-Input: <input type="number" value="@Book.Price" /><br />
+        </div>
+        <br />
+        <br />
+        <h4>Two way data binding - On event change ("default")</h4>
+        Price-Input: <input type="number" @bind-value="Book.Price" /><br />
+        <br />
+        <h4>Two way data binding - bind by declared event (oninput)</h4>
+        Price-Input: <input type="number" @bind-value="Book.Price" @bind-value:event="oninput" /><br />
+
+        <br />
+
+    </div>
+    <div class="col-6 border p-3">
+        <h3 class="text-primary">Book Details</h3><hr />
+        Name: @(Book.AuthorFirstName + ' ' + Book.AuthorLastName)<br />
+        Title: @Book.Title<br />
+        IsActive: @Book.IsActive <br />
+        Price: @Book.Price <br />
+
+        @*example of C# ternary operation*@
+        This Book is: @(Book.IsActive ? "Active" : "InActive") <br />
+    </div>
+    <br/>
+    <div class="col-12 pt-4">
+        <h2 class="text-success">Book List</h2>
+        <table class="table table-striped">
+            <tbody>
+            @foreach (var book in Books)
+            {
+                <tr>
+                    <td><input type="text" @bind-value="book.AuthorFirstName" @bind-value:event="oninput"/></td>
+                    <td><input type="text" @bind-value="book.AuthorLastName" @bind-value:event="oninput"/></td>
+                    <td><input type="text" @bind-value="book.Price" @bind-value:event="oninput"/></td>
+                    <td><input type="checkbox" @bind-value="book.IsActive" checked="@(book.IsActive ? "checked" : null)" /></td>
+                </tr>
+            }
+            </tbody>
+
+        </table>
+        <br/><br/>
+        <h2>Product Summary</h2>
+        @foreach (var book in Books)
+        {
+            <p>@book.Title By @(book.AuthorFirstName + ' ' + book.AuthorLastName) [@book.Price] is @(book.IsActive ? "Active" : "InActive")</p>
+        }
+        <br/>
+    </div>
+</div>
+
+@code {
+
+    private string selectedProp = "";
+    List<BookDTO> Books = new();
+
+    public BookDTO Book = new()
+    {
+        Id = 1,
+        AuthorFirstName = "Dean",
+        AuthorLastName = "Koontz",
+        Title = "Quick Silver",
+        IsActive = true,
+        Price = 2.49
+    };
+
+    protected override void OnInitialized()
+    {
+        Books.Add(new()
+        {
+            Id = 2,
+            AuthorFirstName = "Mark",
+            AuthorLastName = "Sullivan",
+            Title = "The Last Green Valley",
+            IsActive = true,
+            Price = 9.59
+        });
+
+        Books.Add(new()
+        {
+            Id = 3,
+            AuthorFirstName = "James",
+            AuthorLastName = "Mace",
+            Title = "Soldier of Rome: March to Oblivion",
+            IsActive = true,
+            Price = 4.99
+        });
+    }
+}

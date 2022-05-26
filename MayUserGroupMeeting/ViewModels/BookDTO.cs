@@ -2,7 +2,7 @@
 {
     public class BookDTO
     {
-        public int BookId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter a title")]
         public string Title { get; set; } = null!;
@@ -24,5 +24,8 @@
         public int ReviewRating { get; set; }
 
         public string Comments { get; set; } = null!;
+        public bool IsActive { get; set; }
+
+        public double Price { get; set; }
     }
 }

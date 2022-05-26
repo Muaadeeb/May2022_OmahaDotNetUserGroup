@@ -21,7 +21,7 @@
 
         public async Task<BookDTO> UpdateBookAsync(BookDTO obj)
         {
-            var bookDetails = await _context.Books.FindAsync(obj.BookId);
+            var bookDetails = await _context.Books.FindAsync(obj.Id);
             var book = _mapper.Map<BookDTO, Book>(obj, bookDetails!);
 
             var updatedBook = _context.Books.Update(book);

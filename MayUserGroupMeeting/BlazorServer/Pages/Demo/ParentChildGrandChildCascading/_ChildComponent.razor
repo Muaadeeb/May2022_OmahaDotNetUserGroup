@@ -1,0 +1,53 @@
+﻿<div>
+    <div class="alert alert-info">@Title</div>
+    <hr />
+    <div class="alert alert-success">
+        @if (DangerChildContent is not null)
+        {
+            <span>@DangerChildContent</span>
+        }
+        else
+        {
+            @if (ChildContent is not null)
+            {
+                <span>@ChildContent</span>
+            }
+            else
+            {
+                <span>Show else condition for when there is an empty RenderFragment</span>
+            }
+        }
+        
+    </div>
+    <div>
+        <p>The below button lives in the child component.  When clicked this will generate an "event callback" straight to the parent.</p>
+        <button class="btn btn-danger" @onclick="OnButtonClick">Button to be clicked [From Child]</button>
+    </div>
+    
+    
+    <p>A child method will be invoked from the parent.  @ParentToChildMethodInvoked </p>
+    <_GrandChildComponent></_GrandChildComponent>
+</div>
+
+@code {
+
+    public string ParentToChildMethodInvoked { get; set; }
+
+    [Parameter]
+    public string Title { get; set; } = null!;
+
+    // RenderFragment = capture what ever is in the content of the starting/closing tags.
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+
+    [Parameter]
+    public RenderFragment DangerChildContent { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnButtonClick { get; set; }
+
+    public async Task ChildMethod()
+    {
+        ParentToChildMethodInvoked = "We did it!";
+    }
+}

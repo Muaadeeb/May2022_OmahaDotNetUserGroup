@@ -1,0 +1,94 @@
+﻿@page "/lifeCycle"
+
+<h3>LifeCycle</h3>
+
+<p role="status">Current count: @currentCount  This will be used to force the child component to activate.</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<br/>
+<hr/>
+<button @onclick="StartCountDown">Start Countdown : @Count </button>
+
+
+<hr/>
+<div class="border">
+    <_LifeCycle CountValue="@currentCount"></_LifeCycle>
+</div>
+<hr/>
+
+@foreach (var item in EventType)
+{
+    @item
+    <hr/>
+}
+
+@code {
+    private int currentCount = 0;
+    List<string> EventType = new List<string>();
+
+    private int Count { get; set; } = 5;
+
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    protected override void OnInitialized()
+    {
+        EventType.Add("OnInitialized was called.  This is executed when the component is completely loaded.");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventType.Add("OnInitializedAsync was called.  This is executed when the component is completely loaded.");
+        await Task.Delay(1000);
+    }
+
+    protected override void OnParametersSet()
+    {
+        EventType.Add("OnParametersSet was called.  When a component is first initialized and each time new or updated parameters are received from parent in the render tree.");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        EventType.Add("OnParametersSetAsync was called.  When a component is first initialized and each time new or updated parameters are received from parent in the render tree.");
+        await Task.Delay(1000);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        // use case - dom loaded but we need something to happen. (js)
+        currentCount = firstRender ? 222 : 999;
+
+        EventType.Add("OnAfterRender was called.  Called after each render of the component."); // logging will not appear on page because page is already loaded.
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {   
+        // use case - dom loaded but we need something to happen. (js)
+        EventType.Add("OnAfterRenderAsync was called.  Called after each render of the component."); // logging will not appear on page because page is already loaded.
+        await Task.Delay(1000);
+    }
+
+    protected override bool ShouldRender()
+    {
+        // will by default always be true on first render. So will not be called.
+        EventType.Add("ShouldRender was called.  Called after each render of the component."); // logging will not appear on page because page is already loaded.
+        return true;
+    }
+
+    void StartCountDown()
+    {
+        var timer = new Timer(TimeCallBack!, null, 1000, 1000);
+    }
+
+    void TimeCallBack(object state)
+    {
+        if (Count > 0)
+        {
+            Count--;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+}

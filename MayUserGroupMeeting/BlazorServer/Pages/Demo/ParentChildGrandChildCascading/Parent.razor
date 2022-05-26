@@ -1,0 +1,35 @@
+﻿@page "/parent"
+@using System.Diagnostics
+
+<h3>ParentComponent / Child Relation</h3>
+<hr />
+
+<CascadingValue Name="someMessage" Value="@SomeMessageForGrandChild" >
+    <CascadingValue Name="someNumber" Value="@SomeNumberForGrandChild" >
+        <_ChildComponent @ref="childComponent" OnButtonClick="ShowMessage" Title="This title is passed as parameter from the parent to the child component.">
+            <ChildContent>"ChildContent" information from the parent being shown in the child using RenderFragment</ChildContent>
+            @*<DangerChildContent>"DangerChildContent" information from the parent being shown in the child using RenderFragment</DangerChildContent>*@
+        </_ChildComponent>
+    </CascadingValue>
+</CascadingValue>
+
+<hr />
+<p><strong>@MessageText</strong></p>
+<hr />
+<div class="row" style="margin-top: 25px">
+    <h4 class="text-primary pt-3">This parent component will invoke a method within the child.</h4>
+    <button class="btn btn-success" @onclick="() => childComponent.ChildMethod()">Call a child method from the parent.</button>
+</div>
+
+@code {
+    
+    private _ChildComponent childComponent = null!;
+    public string SomeMessageForGrandChild = "This message is from your grand parent (ParentComponent)";
+    public int SomeNumberForGrandChild = 7;
+    public string MessageText = string.Empty;
+
+    private void ShowMessage()
+    {
+        MessageText = "Button clicked from Child Component";
+    }
+}

@@ -44,7 +44,7 @@
 
         public async Task<BookDTO?> GetBookAsync(int id)
         {
-            var bookData = await _context.Books.FirstOrDefaultAsync((x => x.BookId == id));
+            var bookData = await _context.Books.FirstOrDefaultAsync((x => x.Id == id));
 
             if (bookData == null)
             {

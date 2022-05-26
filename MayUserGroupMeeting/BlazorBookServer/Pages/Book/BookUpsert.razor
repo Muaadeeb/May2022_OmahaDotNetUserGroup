@@ -1,0 +1,112 @@
+﻿@page "/person/create"
+@page "/person/edit/{PersonId:int}"
+
+@using Business.Interfaces
+@using ModelDTOs
+@using Microsoft.AspNetCore.Components
+@using BlazorServer.Helper
+
+
+@inject NavigationManager _navigationManager
+@inject IPersonManager _personManager
+@inject IJSRuntime _jsRuntime
+
+<div class="row mt-2 mb-5">
+    <h3 class="card-title text-info mb-3 ml-3">@Title Person</h3>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="PersonDto" OnValidSubmit="HandlePersonUpsert">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <InputText @bind-Value="PersonDto.FirstName" class="form-control" />
+                        <ValidationMessage For="()=> PersonDto.FirstName"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <InputText @bind-Value="PersonDto.LastName" class="form-control" />
+                        <ValidationMessage For="()=> PersonDto.LastName"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <InputNumber @bind-Value="PersonDto.Age" class="form-control" />
+                        <ValidationMessage For="()=> PersonDto.Age"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <InputDate type="text" class="form-control" @bind-Value="PersonDto.DateOfBirth" min="@DateTime.Now.AddYears(-80).ToString("yyy-MM-dd")" />
+                        <ValidationMessage For="()=> PersonDto.DateOfBirth"></ValidationMessage>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary">@Title Person </button>
+                        <NavLink href="person-list" class="btn btn-secondary">Back</NavLink>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int? PersonId { get; set; }
+
+    private PersonDTO PersonDto { get; set; } = new PersonDTO();
+    private string Title { get; set; } = "Create";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (PersonId != null)
+        {
+            Title = "Update";
+            PersonDto = await _personManager.GetPersonAsync(PersonId.Value);
+        }
+        else
+        {
+            Title = "Create";
+            PersonDto = new PersonDTO();
+        }
+    }
+
+    private async Task HandlePersonUpsert()
+    {
+        try
+        {
+            if (PersonDto.PersonId != 0 && Title == "Update")
+            {
+                var updateResult = await _personManager.UpdatePersonAsync(PersonDto);
+
+                if (updateResult != null)
+                {
+                    await _jsRuntime.ToastrSuccess("Person updated successfully.");
+                }
+                else
+                {
+                    await _jsRuntime.ToastrError("Something went wrong.  Person was not successfully updated, try again.");
+                }
+            }
+            else
+            {
+                var createdResult = await _personManager.CreatePersonAsync(PersonDto);
+                if (createdResult != null)
+                {
+                    await _jsRuntime.ToastrSuccess("Person created successfully.");
+                }
+                else
+                {
+                    await _jsRuntime.ToastrError("Something went wrong.  Person was not successfully created, try again.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Whoops! Location: Handle Person Upsert -> {ex.Message}");
+        }
+
+        _navigationManager.NavigateTo("person-list");
+    }
+
+
+}

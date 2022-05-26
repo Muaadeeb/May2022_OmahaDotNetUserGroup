@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4-Common", "4-Common", "{8A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{BE344635-4004-4116-A00F-C6C22FD8E911}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBookServer", "BlazorBookServer\BlazorBookServer.csproj", "{295DC755-14FF-4843-B99E-66CD45DF3A3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{BE344635-4004-4116-A00F-C6C22FD8E911}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE344635-4004-4116-A00F-C6C22FD8E911}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE344635-4004-4116-A00F-C6C22FD8E911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295DC755-14FF-4843-B99E-66CD45DF3A3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295DC755-14FF-4843-B99E-66CD45DF3A3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295DC755-14FF-4843-B99E-66CD45DF3A3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295DC755-14FF-4843-B99E-66CD45DF3A3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{24EAE327-4DA8-4C19-8281-43BB067537B9} = {D09C24B7-692D-4AD3-B1AC-54DB07E09B67}
 		{EB5864B3-E58B-479B-842F-5FAB7F9F16D2} = {B9B1AC75-035D-4579-AE8D-1DD7BD3570DF}
 		{BE344635-4004-4116-A00F-C6C22FD8E911} = {5A3F807F-49F5-4F72-BA87-2218B5C26319}
+		{295DC755-14FF-4843-B99E-66CD45DF3A3B} = {5A3F807F-49F5-4F72-BA87-2218B5C26319}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {940F593E-7D16-46B9-903E-8D9C8892AF8C}

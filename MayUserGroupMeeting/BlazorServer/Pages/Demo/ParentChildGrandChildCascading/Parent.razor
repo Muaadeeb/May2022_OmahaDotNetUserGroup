@@ -7,8 +7,8 @@
 <CascadingValue Name="someMessage" Value="@SomeMessageForGrandChild" >
     <CascadingValue Name="someNumber" Value="@SomeNumberForGrandChild" >
         <_ChildComponent @ref="childComponent" OnButtonClick="ShowMessage" Title="This title is passed as parameter from the parent to the child component.">
-            <ChildContent>"ChildContent" information from the parent being shown in the child using RenderFragment</ChildContent>
-            @*<DangerChildContent>"DangerChildContent" information from the parent being shown in the child using RenderFragment</DangerChildContent>*@
+            @*<ChildContent>"ChildContent" information from the parent being shown in the child using RenderFragment</ChildContent>
+            <DangerChildContent>"DangerChildContent" information from the parent being shown in the child using RenderFragment</DangerChildContent>*@
         </_ChildComponent>
     </CascadingValue>
 </CascadingValue>

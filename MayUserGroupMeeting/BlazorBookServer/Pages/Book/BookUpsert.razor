@@ -104,11 +104,11 @@
 
                 if (updateResult != null)
                 {
-                    await _jsRuntime.ToastrSuccess("Person updated successfully.");
+                    await _jsRuntime.ToastrSuccess("Book updated successfully.");
                 }
                 else
                 {
-                    await _jsRuntime.ToastrError("Something went wrong.  Person was not successfully updated, try again.");
+                    await _jsRuntime.ToastrError("Something went wrong.  Book was not successfully updated, try again.");
                 }
             }
             else
@@ -116,17 +116,17 @@
                 var createdResult = await _bookManager.CreateBookAsync(BookDto);
                 if (createdResult != null)
                 {
-                    await _jsRuntime.ToastrSuccess("Person created successfully.");
+                    await _jsRuntime.ToastrSuccess("Book created successfully.");
                 }
                 else
                 {
-                    await _jsRuntime.ToastrError("Something went wrong.  Person was not successfully created, try again.");
+                    await _jsRuntime.ToastrError("Something went wrong.  Book was not successfully created, try again.");
                 }
             }
         }
         catch (Exception ex)
         {
-            throw new Exception($"Whoops! Location: Handle Person Upsert -> {ex.Message}");
+            throw new Exception($"Whoops! Location: Handle Book Upsert -> {ex.Message}");
         }
 
         _navigationManager.NavigateTo("book-list");

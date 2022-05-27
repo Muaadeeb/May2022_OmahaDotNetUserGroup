@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBookServer", "BlazorBookServer\BlazorBookServer.csproj", "{295DC755-14FF-4843-B99E-66CD45DF3A3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudServer", "MudServer\MudServer.csproj", "{532FE3A3-7814-4217-8D62-D1559E4A2FC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudServer", "MudServer\MudServer.csproj", "{532FE3A3-7814-4217-8D62-D1559E4A2FC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
